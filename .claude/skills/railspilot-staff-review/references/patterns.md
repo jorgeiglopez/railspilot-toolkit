@@ -73,6 +73,18 @@ class PushSubscription < ApplicationRecord
 end
 ```
 
+### SEC-03: Tenant Scoping and Authorization
+
+**Applies to:** Controllers, queries, and models touching tenant data
+
+Verify `acts_as_tenant` scoping on models, authorization (Pundit/policy) on controller actions, and no cross-tenant leaks via raw SQL or `unscoped`.
+
+### PERF-01: No N+1 Queries
+
+**Applies to:** Controllers, views, jobs iterating associations
+
+Use `includes`/`preload`/`eager_load` whenever iterating associated records. Detect with Bullet or by spotting `.each` over a collection that calls associations.
+
 ## Architecture
 
 

@@ -14,7 +14,7 @@ This skill provides a comprehensive workflow for implementing issues from **Line
 
 ## Core Workflow
 
-The skill follows a 17-step process:
+The skill follows a 15-step process:
 
 1. **Detect Task Manager** - Examine recent commits on master to identify Linear or Jira
 2. **Fetch Issue** - Retrieve complete issue details via appropriate MCP/API
@@ -25,14 +25,12 @@ The skill follows a 17-step process:
 7. **Save to Memory** - Store plan in memory graph for tracking
 8. **Review Plan** - Present plan for user confirmation
 9. **TDD Implementation** - Invoke `tdd-skill` skill for test-driven development
-10. **Code Simplification** - Invoke `simplify` skill to review for reuse, quality, and efficiency
-11. **Full Code Review** - Invoke `full-code-review` skill (security + Rails best practices)
-12. **Address Code Review Feedback** - Fix high priority issues from simplify and full code review. Ask for confirmation for lower priority ones
-13. **Staff Engineer Review** - Invoke `railspilot-staff-review` skill (final validation on clean code)
-14. **Address Staff Review Feedback** - Fix high priority issues from staff engineer review. Ask for confirmation for lower priority ones
-15. **Validation** - Ensure all tests pass on the new changes
-16. **Create PR title and description** - Invoke `pr-title-and-description` skill
-17. **Completion Summary** - Present PR title and description wich a checklist of all completed steps
+10. **Staff Engineer Review** - Invoke `railspilot-staff-review` skill via separate Task agent
+11. **Address Staff Review Feedback** - Fix high priority issues. Ask for confirmation for lower priority ones
+12. **Code Simplification** - Invoke `simplify` skill via separate Task agent (final cleanup)
+13. **Validation** - Ensure all tests pass on the new changes
+14. **Create PR title and description** - Invoke `pr-title-and-description` skill
+15. **Completion Summary** - Present PR title and description with a checklist of all completed steps
 
 ## Workflow Implementation Details
 
@@ -231,43 +229,19 @@ Present the complete plan for confirmation:
 
 ### Step 9: TDD Implementation
 
-### Step 10: Code Simplification
+### Step 10: Staff Engineer Review
 
-### Step 11: Full Code Review
+Dispatch a separate Task agent to invoke the `railspilot-staff-review` skill. Return findings only.
 
-### Step 12: Address Code Review Feedback
+### Step 11: Address Staff Review Feedback
 
-Before the staff engineer review, address all findings from simplify and full code review so the staff review sees clean code:
+Fix high priority findings; ask for confirmation on lower priority ones. Validate with tests. Do NOT proceed until addressed.
 
-**Process:**
-1. Review any feedback from simplify that couldn't be auto-fixed
-2. Parse and prioritize feedback from full-code-review
-3. Implement fixes incrementally with test validation
-4. Ensure backward compatibility
+### Step 12: Code Simplification
 
-**Architectural Feedback is MANDATORY:**
-- Extract service objects if controllers/models have too many responsibilities
-- Apply Result pattern for operations that can fail
-- Refactor to improve testability and maintainability
-- Add comprehensive specs for new service objects
+Dispatch a separate Task agent to invoke the `simplify` skill (final cleanup pass). Return findings only and apply fixes.
 
-**Note:** Do NOT proceed to staff review until all code review feedback is addressed.
-
-### Step 13: Staff Engineer Review
-
-### Step 14: Address Staff Review Feedback
-
-Address findings from the staff engineer review:
-
-**Process:**
-1. Parse and prioritize staff review findings by severity
-2. Implement fixes incrementally with test validation
-3. Ensure backward compatibility
-4. Update documentation as needed
-
-**Note:** Do NOT create PR until all staff review feedback is addressed.
-
-### Step 15: Validation
+### Step 13: Validation
 
 Before creating commits, ensure everything passes:
 
@@ -299,21 +273,18 @@ mise exec -- rspec
 
 **Differences:** Jira prefixes the subject with the issue key (e.g., `PROJ-142 Add user notification service`). Linear does not prefix.
 
-### Step 16: Create PR title and description
+### Step 14: Create PR title and description
 
 Invoke the `pr-title-and-description` skill.
 
-### Step 17: Completion Summary
+### Step 15: Completion Summary
 
 Present checklist to user:
 - Issue analyzed and planned
 - Solution implemented with TDD
-- Comprehensive system specs added
-- Code simplification completed (simplify)
-- Security and Rails review completed (full-code-review)
-- Code review feedback addressed
-- Staff engineer review completed (railspilot-staff-review) — final validation
+- Staff engineer review completed (railspilot-staff-review)
 - Staff review feedback addressed
+- Code simplification completed (simplify)
 - All tests pass
 - Logical commit history created
 - pr-title-and-description given
@@ -323,10 +294,9 @@ Present checklist to user:
 This skill orchestrates multiple specialized skills in a specific sequence:
 
 1. **tdd-skill** (Step 9)
-2. **commit** (Steps 9 through 14)
-3. **simplify** (Step 10) + **full-code-review** (Step 11) → Address findings (Step 12)
-4. **railspilot-staff-review** (Step 13) → Address findings (Step 14)
-5. **pr-title-and-description** (Step 16)
+2. **railspilot-staff-review** (Step 10) → Address findings (Step 11)
+3. **simplify** (Step 12) — final cleanup
+4. **pr-title-and-description** (Step 14)
 
 ## Project-Specific Conventions
 
@@ -380,7 +350,6 @@ This skill adheres to project guidelines from `CLAUDE.md`:
 
 **Skills:**
 - `tdd-skill` skill available
-- `full-code-review` skill available
 - `railspilot-staff-review` skill available
 - `simplify` skill available
 - `pr-title-and-description` skill available
@@ -431,14 +400,12 @@ This skill adheres to project guidelines from `CLAUDE.md`:
 7. **Save to Memory** — stores plan in memory graph
 8. **Review Plan** — presents plan for approval. **Waits for user confirmation.**
 9. **TDD Implementation** — invokes `tdd-skill` skill
-10. **Code Simplification** — invokes `simplify` skill, applies fixes
-11. **Full Code Review** — invokes `full-code-review` skill (security + Rails best practices)
-12. **Address Code Review Feedback** — fixes high priority issues, asks for confirmation on lower priority ones
-13. **Staff Engineer Review** — invokes `railspilot-staff-review` skill (final validation on clean code)
-14. **Address Staff Review Feedback** — fixes high priority issues, asks for confirmation on lower priority ones
-15. **Validation** — runs `mise exec -- rspec`, fixes any failures
-16. **Create PR title and description** — invokes `pr-title-and-description` skill
-17. **Completion Summary** — presents PR title and description with a checklist of all completed steps
+10. **Staff Engineer Review** — invokes `railspilot-staff-review` skill via separate Task agent
+11. **Address Staff Review Feedback** — fixes high priority issues, asks for confirmation on lower priority ones
+12. **Code Simplification** — invokes `simplify` skill via separate Task agent (final cleanup), applies fixes
+13. **Validation** — runs `mise exec -- rspec`, fixes any failures
+14. **Create PR title and description** — invokes `pr-title-and-description` skill
+15. **Completion Summary** — presents PR title and description with a checklist of all completed steps
 
 **Final Output:**
 - Working feature branch with complete implementation
