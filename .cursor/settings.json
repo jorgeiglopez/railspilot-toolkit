@@ -39,5 +39,6 @@
   "editor.formatOnPaste": true,
   "cursor.composer.usageSummaryDisplay": "always",
   "rubocop.autocorrect": false,
-  "rubyLsp.formatter": "none"
+  "rubyLsp.formatter": "none",
+  "terminal.integrated.enableMultiLinePasteWarning": "never"
 }

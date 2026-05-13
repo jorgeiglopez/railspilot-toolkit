@@ -58,7 +58,7 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "model": "opus",
+  "model": "sonnet",
   "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [],
   "disabledMcpjsonServers": [],

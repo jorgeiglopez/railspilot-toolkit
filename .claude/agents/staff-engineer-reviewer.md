@@ -6,7 +6,7 @@ tools:
   - Glob
   - Grep
   - Bash
-model: opus
+model: claude-opus-4-6
 color: purple
 memory: user
 ---
