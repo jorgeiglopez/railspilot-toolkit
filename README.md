@@ -27,7 +27,6 @@ available (in Rails, it would take precedense before `$PORT`).
 - `staff-engineer-reviewer`: Pattern-library review through a staff engineer's lens
 - `layered-rails-gradual`: Phased roadmaps for incremental layered-architecture adoption
 - `refactor-planner`: Safe, incremental refactoring plans
-- `railspilot-progress-reporter`: Monthly client progress reports
 - `jira-fetcher`: Lightweight Jira data fetcher for `/today`
 
 ### Skills
@@ -65,6 +64,7 @@ available (in Rails, it would take precedense before `$PORT`).
 #### Git & PR
 
 - `commit`: Commit with a well-structured message explaining the why; also generates PR titles/descriptions
+- `railspilot-progress-report`: Monthly client progress reports from merged PRs
 
 #### Productivity
 
