@@ -192,22 +192,22 @@ if [ -n "$session_start" ] && [ "$session_start" != "null" ]; then
     fi
 fi
 
-line1="📁 ${cyan}${dirname}${reset}"
+line1="${cyan}${dirname}${reset}"
 if [ -n "$git_branch" ]; then
     line1+="${sep}${green}${git_branch}${red}${git_dirty}${reset}"
 fi
 line1+="${sep}"
-line1+="🧠 ${blue}${model_short}${reset}"
+line1+="${blue}${model_short}${reset}"
 if [ -n "$effort" ]; then
     line1+=" ${dim}(${reset}${magenta}${effort}${dim})${reset}"
 fi
 line1+="${sep}"
-line1+="🧮 ${white}${used_tokens}${reset} ${pct_color}(${pct_used}%)${reset}"
+line1+="${white}${used_tokens}${reset} ${pct_color}(${pct_used}%)${reset}"
 if [ -n "$session_duration" ]; then
-    line1+="${sep}${dim}⏱ ${reset}${white}${session_duration}${reset}"
+    line1+="${sep}${white}${session_duration}${reset}"
 fi
 line1+="${sep}"
-line1+="💰 ${white}\$${total_cost}${reset}"
+line1+="${white}\$${total_cost}${reset}"
 
 # ── OAuth token resolution ──────────────────────────────
 get_oauth_token() {
